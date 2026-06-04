@@ -66,6 +66,20 @@ func (p WorkspacePathPermissions) Compare(perms []resources.Permission) diag.Dia
 	return diags
 }
 
+// HasUndeclaredManagers reports whether any principal with CAN_MANAGE or IS_OWNER
+// access to the workspace folder is not declared in perms with at least CAN_MANAGE.
+// Lower folder access levels do not need to be declared.
+func (p WorkspacePathPermissions) HasUndeclaredManagers(perms []resources.Permission) bool {
+	var managers []resources.Permission
+	for _, wp := range p.Permissions {
+		if string(wp.Level) == CAN_MANAGE || string(wp.Level) == "IS_OWNER" {
+			managers = append(managers, wp)
+		}
+	}
+	ok, _ := containsAll(managers, perms)
+	return !ok
+}
+
 // samePrincipal checks if two permissions refer to the same user/group/service principal.
 func samePrincipal(a, b resources.Permission) bool {
 	return a.UserName == b.UserName &&
