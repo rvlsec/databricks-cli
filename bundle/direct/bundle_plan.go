@@ -454,18 +454,62 @@ func shouldSkipBackendDefault(cfg *dresources.ResourceLifecycleConfig, path *str
 	if cfg == nil || ch.Old != nil || ch.New != nil || ch.Remote == nil {
 		return "", false
 	}
-	for _, rule := range cfg.BackendDefaults {
-		if !path.HasPatternPrefix(rule.Field) {
-			continue
-		}
-		if len(rule.Values) == 0 {
-			return deployplan.ReasonBackendDefault, true
-		}
-		if matchesAllowedValue(ch.Remote, rule.Values) {
-			return deployplan.ReasonBackendDefault, true
-		}
+	if matchesAnyBackendDefault(cfg, path, ch.Remote) || matchesBackendDefaultMap(cfg, path, ch.Remote) {
+		return deployplan.ReasonBackendDefault, true
 	}
 	return "", false
+}
+
+// matchesAnyBackendDefault reports whether the change at path matches any of the
+// resource's configured backend-default rules.
+func matchesAnyBackendDefault(cfg *dresources.ResourceLifecycleConfig, path *structpath.PathNode, remote any) bool {
+	for _, rule := range cfg.BackendDefaults {
+		if matchesBackendDefaultRule(path, remote, rule) {
+			return true
+		}
+	}
+	return false
+}
+
+func matchesBackendDefaultRule(path *structpath.PathNode, remote any, rule dresources.BackendDefaultRule) bool {
+	if !path.HasPatternPrefix(rule.Field) {
+		return false
+	}
+	if len(rule.Values) == 0 {
+		return true
+	}
+	return matchesAllowedValue(remote, rule.Values)
+}
+
+// matchesBackendDefaultMap handles the nil-vs-map case from structdiff, where a
+// remote-only map change is emitted at the parent path rather than per key.
+// We only skip the parent map if every remote entry matches a configured
+// backend-default child rule; any unmanaged key must still surface as drift.
+func matchesBackendDefaultMap(cfg *dresources.ResourceLifecycleConfig, path *structpath.PathNode, remote any) bool {
+	rv, ok := asNonEmptyStringMap(remote)
+	if !ok {
+		return false
+	}
+
+	iter := rv.MapRange()
+	for iter.Next() {
+		childPath := structpath.NewBracketString(path, iter.Key().String())
+		if !matchesAnyBackendDefault(cfg, childPath, iter.Value().Interface()) {
+			return false
+		}
+	}
+
+	return true
+}
+
+// asNonEmptyStringMap returns remote as a reflected map value when it is a
+// non-nil, non-empty map with string keys; ok is false otherwise.
+func asNonEmptyStringMap(remote any) (reflect.Value, bool) {
+	rv := reflect.ValueOf(remote)
+	if !rv.IsValid() || rv.Kind() != reflect.Map || rv.IsNil() || rv.Type().Key().Kind() != reflect.String || rv.Len() == 0 {
+		return reflect.Value{}, false
+	}
+	return rv, true
 }
 
 // matchesAllowedValue checks if the remote value matches one of the allowed JSON values.
