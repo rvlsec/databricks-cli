@@ -3,9 +3,9 @@ package resources
 import (
 	"testing"
 
-	"github.com/databricks/databricks-sdk-go/service/catalog"
 	"github.com/databricks/databricks-sdk-go/apierr"
 	"github.com/databricks/databricks-sdk-go/experimental/mocks"
+	"github.com/databricks/databricks-sdk-go/service/catalog"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 )
