@@ -27,7 +27,7 @@ require (
 	github.com/sabhiram/go-gitignore v0.0.0-20210923224102-525f6e181f06 // MIT
 	github.com/spf13/cobra v1.9.1 // Apache 2.0
 	github.com/spf13/pflag v1.0.7 // BSD-3-Clause
-	github.com/stretchr/testify v1.10.0 // MIT
+	github.com/stretchr/testify v1.11.1 // MIT
 	golang.org/x/exp v0.0.0-20250620022241-b7579e27df2b
 	golang.org/x/mod v0.27.0
 	golang.org/x/oauth2 v0.30.0
@@ -35,7 +35,7 @@ require (
 	golang.org/x/sys v0.35.0 // indirect
 	golang.org/x/term v0.34.0
 	golang.org/x/text v0.28.0
-	gopkg.in/ini.v1 v1.67.0 // Apache 2.0
+	gopkg.in/ini.v1 v1.67.3 // Apache 2.0
 	gopkg.in/yaml.v3 v3.0.1
 )
 
