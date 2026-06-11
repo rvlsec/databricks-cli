@@ -74,6 +74,21 @@ func ResolveVariableReferencesOnlyResources(prefixes ...string) bundle.Mutator {
 	}
 }
 
+// ResolveVariableReferencesByPattern resolves references only for fields matching the
+// supplied pattern. This is useful when only specific fields should be resolved early.
+func ResolveVariableReferencesByPattern(pattern dyn.Pattern, prefixes ...string) bundle.Mutator {
+	if len(prefixes) == 0 {
+		prefixes = defaultPrefixes
+	}
+	return &resolveVariableReferences{
+		prefixes:         prefixes,
+		lookupFn:         lookup,
+		extraRounds:      maxResolutionRounds - 1,
+		pattern:          pattern,
+		includeResources: true,
+	}
+}
+
 func ResolveVariableReferencesWithoutResources(prefixes ...string) bundle.Mutator {
 	if len(prefixes) == 0 {
 		prefixes = defaultPrefixes
