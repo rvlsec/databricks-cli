@@ -1,4 +1,6 @@
-trace $CLI bundle validate -o json | jq .resources > out.validate.json
+# Use Python JSON parsing here instead of jq: jq coerces large integers to IEEE754
+# and rounds int64 values, which would hide regressions in job_id handling.
+trace $CLI bundle validate -o json | python3 -c 'import json,sys; print(json.dumps(json.load(sys.stdin)["resources"], indent=2))' > out.validate.json
 trace $CLI bundle plan -o json > out.plan.$DATABRICKS_BUNDLE_ENGINE.json
 $CLI bundle deploy $(readplanarg out.plan.direct.json)
 trace print_requests.py //jobs

@@ -209,6 +209,37 @@ func applyNormalizeMutators(ctx context.Context, b *bundle.Bundle) {
 	)
 }
 
+// applyVolumePathMutators first resolves volume path input fields, then computes
+// volume_path, then resolves references to ${resources.volumes.*.volume_path}.
+//
+// This runs after applyInitializeMutators so presets and defaults (e.g. volume name
+// prefixes) are applied first. A resolve pass is needed before computing volume_path
+// because CaptureUCDependencies may rewrite schema_name to ${resources.schemas.*.name}.
+func applyVolumePathMutators(ctx context.Context, b *bundle.Bundle) {
+	bundle.ApplySeqContext(
+		ctx,
+		b,
+		// Resolve only volume path inputs first, so refs to volume_path in other fields
+		// (for example, volumes.*.comment) are not prematurely resolved to empty values.
+		mutator.ResolveVariableReferencesByPattern(
+			dyn.NewPattern(dyn.Key("resources"), dyn.Key("volumes"), dyn.AnyKey(), dyn.Key("catalog_name")),
+			"resources",
+		),
+		mutator.ResolveVariableReferencesByPattern(
+			dyn.NewPattern(dyn.Key("resources"), dyn.Key("volumes"), dyn.AnyKey(), dyn.Key("schema_name")),
+			"resources",
+		),
+		mutator.ResolveVariableReferencesByPattern(
+			dyn.NewPattern(dyn.Key("resources"), dyn.Key("volumes"), dyn.AnyKey(), dyn.Key("name")),
+			"resources",
+		),
+		mutator.InitializeVolumePaths(),
+		// Cross-resource refs (${resources.schemas.*}, ${resources.volumes.*.volume_path})
+		// require the "resources" prefix; defaultPrefixes omit it by design.
+		mutator.ResolveVariableReferencesOnlyResources("resources"),
+	)
+}
+
 // NormalizeAndInitializeResources initializes and normalizes specified resources,
 // and should be used by mutators after they have added resources.
 func NormalizeAndInitializeResources(
@@ -238,6 +269,11 @@ func NormalizeAndInitializeResources(
 	}
 
 	applyInitializeMutators(ctx, b)
+	if logdiag.HasError(ctx) {
+		return
+	}
+
+	applyVolumePathMutators(ctx, b)
 	if logdiag.HasError(ctx) {
 		return
 	}
