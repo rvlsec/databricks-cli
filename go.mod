@@ -9,7 +9,7 @@ require (
 	github.com/BurntSushi/toml v1.5.0 // MIT
 	github.com/Masterminds/semver/v3 v3.4.0 // MIT
 	github.com/briandowns/spinner v1.23.1 // Apache 2.0
-	github.com/databricks/databricks-sdk-go v0.79.0 // Apache 2.0
+	github.com/databricks/databricks-sdk-go v0.144.0 // Apache 2.0
 	github.com/fatih/color v1.18.0 // MIT
 	github.com/google/uuid v1.6.0 // BSD-3-Clause
 	github.com/gorilla/mux v1.8.1 // BSD 3-Clause
@@ -27,14 +27,14 @@ require (
 	github.com/sabhiram/go-gitignore v0.0.0-20210923224102-525f6e181f06 // MIT
 	github.com/spf13/cobra v1.9.1 // Apache 2.0
 	github.com/spf13/pflag v1.0.7 // BSD-3-Clause
-	github.com/stretchr/testify v1.10.0 // MIT
+	github.com/stretchr/testify v1.11.1 // MIT
 	golang.org/x/exp v0.0.0-20250620022241-b7579e27df2b
-	golang.org/x/mod v0.27.0
-	golang.org/x/oauth2 v0.30.0
-	golang.org/x/sync v0.16.0
-	golang.org/x/sys v0.35.0 // indirect
-	golang.org/x/term v0.34.0
-	golang.org/x/text v0.28.0
+	golang.org/x/mod v0.30.0
+	golang.org/x/oauth2 v0.34.0
+	golang.org/x/sync v0.19.0
+	golang.org/x/sys v0.39.0 // indirect
+	golang.org/x/term v0.38.0
+	golang.org/x/text v0.32.0
 	gopkg.in/ini.v1 v1.67.0 // Apache 2.0
 	gopkg.in/yaml.v3 v3.0.1
 )
@@ -42,11 +42,12 @@ require (
 require (
 	cloud.google.com/go/auth v0.16.2 // indirect
 	cloud.google.com/go/auth/oauth2adapt v0.2.8 // indirect
-	cloud.google.com/go/compute/metadata v0.7.0 // indirect
+	cloud.google.com/go/compute/metadata v0.9.0 // indirect
 	github.com/ProtonMail/go-crypto v1.1.6 // indirect
 	github.com/apparentlymart/go-textseg/v15 v15.0.0 // indirect
 	github.com/bitfield/gotestdox v0.2.2 // indirect
 	github.com/bmatcuk/doublestar/v4 v4.7.1 // indirect
+	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/chzyer/readline v0.0.0-20180603132655-2972be24d48e // indirect
 	github.com/cloudflare/circl v1.6.1 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
@@ -70,19 +71,19 @@ require (
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/stretchr/objx v0.5.2 // indirect
 	github.com/zclconf/go-cty v1.16.2 // indirect
-	go.opentelemetry.io/auto/sdk v1.1.0 // indirect
+	go.opentelemetry.io/auto/sdk v1.2.1 // indirect
 	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.61.0 // indirect
-	go.opentelemetry.io/otel v1.36.0 // indirect
-	go.opentelemetry.io/otel/metric v1.36.0 // indirect
-	go.opentelemetry.io/otel/trace v1.36.0 // indirect
-	golang.org/x/crypto v0.40.0 // indirect
-	golang.org/x/net v0.42.0 // indirect
+	go.opentelemetry.io/otel v1.39.0 // indirect
+	go.opentelemetry.io/otel/metric v1.39.0 // indirect
+	go.opentelemetry.io/otel/trace v1.39.0 // indirect
+	golang.org/x/crypto v0.46.0 // indirect
+	golang.org/x/net v0.48.0 // indirect
 	golang.org/x/time v0.12.0 // indirect
-	golang.org/x/tools v0.35.0 // indirect
+	golang.org/x/tools v0.39.0 // indirect
 	google.golang.org/api v0.238.0 // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20250603155806-513f23925822 // indirect
-	google.golang.org/grpc v1.73.0 // indirect
-	google.golang.org/protobuf v1.36.6 // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20251202230838-ff82c1b0f217 // indirect
+	google.golang.org/grpc v1.79.3 // indirect
+	google.golang.org/protobuf v1.36.10 // indirect
 	gotest.tools/gotestsum v1.12.1 // indirect
 )
 
