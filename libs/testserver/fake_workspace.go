@@ -55,10 +55,13 @@ var (
 	lastNowMilli int64
 )
 
-// IDs are prefixed with 7 and padded to avoid matching regex 1[78]\d{14}
+// Use 16-digit IDs below 2^53 so JSON round-trips through float-capable paths
+// (for example map[string]any in test helpers) without precision loss.
+// Prefix with 9 to avoid matching unix-time replacement regexes like 1[78]\d{14}.
 func nextID() int64 {
-	// offset enough so that it does not match UNIX_TIME_NANO regex
-	return nowNano() + 7000000000000000000
+	// Offset keeps generated IDs stable for acceptance replacements while staying in
+	// JavaScript's safe integer range (2^53-1 = 9007199254740991).
+	return nowMilli() + 9000000000000000
 }
 
 // nextID returns nanosecond timestamp but offset but strictly incremental

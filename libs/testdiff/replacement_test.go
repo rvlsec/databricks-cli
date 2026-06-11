@@ -75,3 +75,16 @@ func TestReplaceAppliesInOrder(t *testing.T) {
 	got := rc.Replace(input)
 	assert.Equal(t, "C", got)
 }
+
+func TestReplaceSpecificNumberBeforeGenericRegex(t *testing.T) {
+	rc := ReplacementsContext{}
+	rc.SetWithOrder("8781181929457644375", "[FOO_ID]", -100)
+	rc.Repls = append(rc.Repls, Replacement{
+		Old:   regexp.MustCompile(`\d{17,}`),
+		New:   "[NUMID]",
+		Order: 10,
+	})
+
+	got := rc.Replace(`{"job_id": 8781181929457644375}`)
+	assert.Equal(t, `{"job_id": [FOO_ID]}`, got)
+}
